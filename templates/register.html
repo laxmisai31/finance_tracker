@@ -2,20 +2,17 @@
 <html>
 <head>
     <title>Register</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
 <div class="container">
 
     <h1>💰 Personal Finance Tracker</h1>
 
-    <h2>Create Account</h2>
+    <h2>Register</h2>
 
-    <form method="POST">
+    <form action="/register" method="POST">
 
         <input
             type="text"
@@ -35,16 +32,11 @@
 
     </form>
 
+    <br>
+
     <p>
-
-        Already Registered?
-
-        <a href="/login">
-
-            Login
-
-        </a>
-
+        Already have an account?
+        <a href="/login">Login Here</a>
     </p>
 
 </div>
