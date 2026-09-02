@@ -1,45 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Finance Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
 </head>
-<body>
 
-<div class="container">
 
-    <h1>💰 Personal Finance Tracker</h1>
+<body class="login-page">
 
-    <h2>Login</h2>
 
-    <form action="/login" method="POST">
+    <!-- Background Glow Effects -->
 
-        <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            required>
+    <div class="login-glow glow-one"></div>
+    <div class="login-glow glow-two"></div>
+    <div class="login-glow glow-three"></div>
 
-        <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required>
 
-        <button type="submit">
-            Login
-        </button>
+    <!-- Main Login Container -->
 
-    </form>
+    <div class="login-container">
 
-    <br>
 
-    <p>
-        Don't have an account?
-        <a href="/register">Register Here</a>
-    </p>
+        <!-- LEFT SIDE -->
 
-</div>
+        <div class="login-brand">
+
+            <div class="brand-icon">
+                💰
+            </div>
+
+            <h1>
+                Finance Tracker
+            </h1>
+
+            <p class="brand-tagline">
+                Take control of your money.
+            </p>
+
+            <p class="brand-description">
+                Track your income, manage expenses,
+                understand your spending and build
+                better financial habits.
+            </p>
+
+
+            <!-- Feature Cards -->
+
+            <div class="login-features">
+
+                <div class="login-feature">
+                    <span>💰</span>
+                    <div>
+                        <strong>Track Income</strong>
+                        <small>Know where your money comes from</small>
+                    </div>
+                </div>
+
+
+                <div class="login-feature">
+                    <span>📊</span>
+                    <div>
+                        <strong>Smart Analytics</strong>
+                        <small>Understand your spending patterns</small>
+                    </div>
+                </div>
+
+
+                <div class="login-feature">
+                    <span>🎯</span>
+                    <div>
+                        <strong>Stay in Control</strong>
+                        <small>Make every rupee count</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RIGHT SIDE LOGIN CARD -->
+
+        <div class="login-card">
+
+
+            <div class="login-card-icon">
+                🔐
+            </div>
+
+
+            <h2>
+                Welcome Back
+            </h2>
+
+            <p class="login-subtitle">
+                Sign in to continue to your dashboard
+            </p>
+
+
+            <form action="/login" method="POST">
+
+
+                <!-- Username -->
+
+                <div class="login-input-group">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <div class="login-input-wrapper">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Enter your username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="login-input-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <div class="login-input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Login Button -->
+
+                <button
+                    type="submit"
+                    class="neon-login-btn">
+
+                    <span>
+                        Login
+                    </span>
+
+                    <span class="login-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+            <!-- Register -->
+
+            <div class="register-section">
+
+                <span>
+                    Don't have an account?
+                </span>
+
+                <a href="/register">
+                    Create Account
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Footer -->
+
+    <div class="login-footer">
+
+        <span>
+            🔒 Your financial data stays private
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span>
+            Finance Tracker
+        </span>
+
+    </div>
+
 
 </body>
+
 </html>

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>➕ Add Transaction</h1>
+    <p>Record your income or expense and keep your finances organized.</p>
+</div>
+
+<div class="transaction-form-card">
+
+    <div class="form-card-header">
+        <div class="form-header-icon">💰</div>
+
+        <div>
+            <h2>New Transaction</h2>
+            <p>Enter the details below</p>
+        </div>
+    </div>
+
+
+    <form action="/add" method="POST">
+
+        <div class="transaction-form-grid">
+
+            <!-- DATE -->
+            <div class="form-group">
+                <label for="date">📅 Date</label>
+
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    required
+                >
+            </div>
+
+
+            <!-- TYPE -->
+            <div class="form-group">
+                <label for="type">🔄 Transaction Type</label>
+
+                <select id="type" name="type" required>
+
+                    <option value="">Select Type</option>
+
+                    <option value="Income">
+                        💰 Income
+                    </option>
+
+                    <option value="Expense">
+                        💸 Expense
+                    </option>
+
+                </select>
+            </div>
+
+
+            <!-- CATEGORY -->
+            <div class="form-group">
+                <label for="category">🏷️ Category</label>
+
+                <input
+                    type="text"
+                    id="category"
+                    name="category"
+                    placeholder="Food, Salary, Travel..."
+                    required
+                >
+            </div>
+
+
+            <!-- AMOUNT -->
+            <div class="form-group">
+                <label for="amount">💵 Amount</label>
+
+                <div class="amount-input">
+                    <span>₹</span>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        required
+                    >
+                </div>
+            </div>
+
+
+            <!-- PAYMENT METHOD -->
+            <div class="form-group">
+                <label for="payment_method">💳 Payment Method</label>
+
+                <select
+                    id="payment_method"
+                    name="payment_method"
+                >
+
+                    <option>Cash</option>
+                    <option>UPI</option>
+                    <option>Debit Card</option>
+                    <option>Credit Card</option>
+                    <option>Net Banking</option>
+
+                </select>
+            </div>
+
+
+            <!-- STATUS -->
+            <div class="form-group">
+                <label for="status">📌 Status</label>
+
+                <select id="status" name="status">
+
+                    <option>Completed</option>
+                    <option>Pending</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group description-group">
+
+            <label for="description">
+                📝 Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="4"
+                placeholder="Add a note about this transaction..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="save-transaction-btn"
+            >
+                💾 Save Transaction
+            </button>
+
+            <a
+                href="/dashboard"
+                class="cancel-btn"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

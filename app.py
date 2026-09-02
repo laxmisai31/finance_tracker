@@ -140,44 +140,26 @@ def dashboard():
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Search
-    search_query = request.args.get("search", "")
-    from_date = request.args.get("from_date", "")
-    to_date = request.args.get("to_date", "")
-
-    if search_query:
-        cursor.execute("""
-            SELECT *
-            FROM transactions
-            WHERE user_id=? AND category LIKE ?
-            ORDER BY id DESCquery = "SELECT * FROM transactions WHERE user_id=?"
-params = [session["user_id"]]
-
-if search_query:
-    query += " AND category LIKE ?"
-    params.append(f"%{search_query}%")
-
-if from_date:
-    query += " AND date >= ?"
-    params.append(from_date)
-
-if to_date:
-    query += " AND date <= ?"
-    params.append(to_date)
-
-query += " ORDER BY id DESC"
-
-cursor.execute(query, params)
-        """, (session["user_id"], f"%{search_query}%"))
-    else:
-        cursor.execute("""
-            SELECT *
-            FROM transactions
-            WHERE user_id=?
-            ORDER BY id DESC
-        """, (session["user_id"],))
+    # Get all transactions (for totals)
+    cursor.execute("""
+        SELECT *
+        FROM transactions
+        WHERE user_id=?
+        ORDER BY id DESC
+    """, (session["user_id"],))
 
     transactions = cursor.fetchall()
+
+    # Get recent 5 transactions
+    cursor.execute("""
+        SELECT *
+        FROM transactions
+        WHERE user_id=?
+        ORDER BY id DESC
+        LIMIT 5
+    """, (session["user_id"],))
+
+    recent_transactions = cursor.fetchall()
 
     total_income = 0
     total_expense = 0
@@ -203,23 +185,78 @@ cursor.execute(query, params)
     conn.close()
 
     return render_template(
-    "dashboard.html",
-    transactions=transactions,
-    total_income=total_income,
-    total_expense=total_expense,
-    balance=balance,
-    category_labels=list(category_data.keys()),
-    category_values=list(category_data.values()),
-    monthly_labels=list(monthly_data.keys()),
-    monthly_values=list(monthly_data.values()),
-    search_query=search_query,
-    from_date=from_date,
-    to_date=to_date
-)
+        "dashboard.html",
+        total_income=total_income,
+        total_expense=total_expense,
+        balance=balance,
+        recent_transactions=recent_transactions
+    )
 # ---------------- ADD TRANSACTION ---------------- #
+@app.route("/transactions")
+def transactions():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Get filter values
+    search_query = request.args.get("search", "")
+    from_date = request.args.get("from_date", "")
+    to_date = request.args.get("to_date", "")
+
+    # Base query
+    query = """
+        SELECT *
+        FROM transactions
+        WHERE user_id=?
+    """
+
+    params = [session["user_id"]]
+
+    # Search by category
+    if search_query:
+        query += " AND category LIKE ?"
+        params.append(f"%{search_query}%")
+
+    # From date filter
+    if from_date:
+        query += " AND date >= ?"
+        params.append(from_date)
+
+    # To date filter
+    if to_date:
+        query += " AND date <= ?"
+        params.append(to_date)
+
+    # Latest transactions first
+    query += " ORDER BY id DESC"
+
+    cursor.execute(query, params)
+
+    transactions = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "transactions.html",
+        transactions=transactions,
+        search_query=search_query,
+        from_date=from_date,
+        to_date=to_date
+    )
+@app.route("/add_transaction")
+def add_transaction():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return render_template("add_transaction.html")
+
 
 @app.route("/add", methods=["POST"])
-def add_transaction():
+def add():
 
     if "user_id" not in session:
         return redirect("/login")
@@ -239,8 +276,7 @@ def add_transaction():
             status
         )
         VALUES(?,?,?,?,?,?,?,?)
-    """,
-    (
+    """, (
         session["user_id"],
         request.form["date"],
         request.form["type"],
@@ -254,8 +290,8 @@ def add_transaction():
     conn.commit()
     conn.close()
 
-    return redirect("/dashboard")
-@app.route("/edit/<int:id>", methods=["GET", "POST"])
+    return redirect("/transactions")
+@app.route("/edit/<int:id>", methods=["GET","POST"])
 def edit_transaction(id):
 
     if "user_id" not in session:
@@ -305,6 +341,8 @@ def edit_transaction(id):
     return render_template("edit.html", transaction=transaction)
 # ---------------- DELETE TRANSACTION ---------------- #
 
+# ---------------- DELETE TRANSACTION ----------------
+
 @app.route("/delete/<int:id>")
 def delete_transaction(id):
 
@@ -314,15 +352,65 @@ def delete_transaction(id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "DELETE FROM transactions WHERE id=? AND user_id=?",
-        (id, session["user_id"])
-    )
+    cursor.execute("""
+        DELETE FROM transactions
+        WHERE id=? AND user_id=?
+    """, (id, session["user_id"]))
 
     conn.commit()
     conn.close()
 
     return redirect("/dashboard")
+# ---------------- ANALYTICS ---------------- #
+
+@app.route("/analytics")
+def analytics():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM transactions
+        WHERE user_id=?
+    """, (session["user_id"],))
+
+    transactions = cursor.fetchall()
+
+    total_income = 0
+    total_expense = 0
+
+    category_data = defaultdict(float)
+    monthly_data = defaultdict(float)
+
+    for row in transactions:
+
+        amount = float(row["amount"])
+
+        if row["type"] == "Income":
+            total_income += amount
+
+        else:
+            total_expense += amount
+            category_data[row["category"]] += amount
+
+        month = row["date"][:7]
+        monthly_data[month] += amount
+
+    conn.close()
+
+    return render_template(
+        "analytics.html",
+        total_income=total_income,
+        total_expense=total_expense,
+        category_labels=list(category_data.keys()),
+        category_values=list(category_data.values()),
+        monthly_labels=list(monthly_data.keys()),
+        monthly_values=list(monthly_data.values())
+    )
 @app.route("/download_pdf")
 def download_pdf():
 
@@ -388,6 +476,15 @@ def logout():
     session.clear()
 
     return redirect("/login")
+# ---------------- REPORTS ---------------- #
+
+@app.route("/reports")
+def reports():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return render_template("reports.html")
 
 
 # ---------------- RUN APPLICATION ---------------- #

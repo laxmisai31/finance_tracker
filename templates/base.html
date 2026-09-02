@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>💰 Finance Tracker</h2>
+
+    <a href="/dashboard">🏠 Dashboard</a>
+    <a href="/add_transaction">➕ Add Transaction</a>
+    <a href="#history">📜 Transactions</a>
+  <a href="{{ url_for('analytics') }}">📊 Analytics</a>
+    <a href="{{ url_for('reports') }}">📄 Reports</a>
+    <a href="#">👤 Profile</a>
+    <a href="/logout">🚪 Logout</a>
+
+</div>
+
+<div class="main-content">
+
+{% block content %}
+
+{% endblock %}
+
+</div>
+
+</body>
+</html>

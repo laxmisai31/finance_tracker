@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <h1>📄 Financial Reports</h1>
+    <p>Generate and download your personal finance reports.</p>
+</div>
+
+
+<div class="reports-grid">
+
+    <!-- PDF REPORT -->
+    <div class="report-card">
+
+        <div class="report-icon">📑</div>
+
+        <h2>Transaction Report</h2>
+
+        <p>
+            Download all your recorded transactions in a
+            professionally formatted PDF report.
+        </p>
+
+        <a href="{{ url_for('download_pdf') }}">
+    <button class="report-btn">
+        📥 Download PDF Report
+    </button>
+</a>
+
+    </div>
+
+
+    <!-- ANALYTICS -->
+    <div class="report-card">
+
+        <div class="report-icon">📊</div>
+
+        <h2>Financial Analytics</h2>
+
+        <p>
+            View your income, expenses, spending categories
+            and monthly financial trends.
+        </p>
+
+        <a href="{{ url_for('analytics') }}">
+            <button class="report-btn analytics-btn">
+                📊 View Analytics
+            </button>
+        </a>
+
+    </div>
+
+
+    <!-- TRANSACTIONS -->
+    <div class="report-card">
+
+        <div class="report-icon">📋</div>
+
+        <h2>Transaction History</h2>
+
+        <p>
+            View, search, filter, edit and manage all your
+            financial transactions.
+        </p>
+
+        <a href="{{ url_for('transactions') }}">
+            <button class="report-btn history-btn">
+                📋 View Transactions
+            </button>
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
