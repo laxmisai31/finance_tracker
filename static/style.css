@@ -3990,3 +3990,23 @@ button {
     pointer-events: auto;
     cursor: pointer;
 }
+/* Fix Create Account click issue */
+.login-glow {
+    pointer-events: none;
+}
+
+.login-footer {
+    pointer-events: none;
+}
+
+.register-section {
+    position: relative;
+    z-index: 1000;
+}
+
+.register-section a {
+    position: relative;
+    z-index: 1001;
+    pointer-events: auto;
+    cursor: pointer;
+}
