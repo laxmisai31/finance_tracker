@@ -3984,3 +3984,9 @@ button {
         display: none;
     }
 }
+.create-account-link {
+    position: relative;
+    z-index: 9999;
+    pointer-events: auto;
+    cursor: pointer;
+}
